@@ -7,6 +7,8 @@ import 'package:myapp/utilities/user_feedback.dart';
 
 class DepositScreen extends StatelessWidget {
 
+  const DepositScreen({Key? key }): super(key: key);
+
   @override
   Widget build(BuildContext context) {
 

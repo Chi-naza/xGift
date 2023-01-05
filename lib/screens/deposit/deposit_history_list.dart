@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/screens/widgets/bottom_navbar.dart';
 import 'package:myapp/screens/widgets/header_n_template_widget2.dart';
 import 'package:myapp/screens/widgets/transaction_history_card.dart';
 
 class DepositHistoryList extends StatelessWidget {
+
+  const DepositHistoryList({Key? key}): super(key: key);
+
+  static const String routeName = '/deposit-tranction-history';
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,7 @@ class DepositHistoryList extends StatelessWidget {
           },
         ),
       ),
+      bottomNavBarWidget: const GiftBottomNavBar(isHome: true),
     );
   }
 }

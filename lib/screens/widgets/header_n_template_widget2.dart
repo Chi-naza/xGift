@@ -7,8 +7,9 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
   final String titleText;
   final bool isTabRequired;
   final Widget content;
+  final Widget? bottomNavBarWidget;
 
-  const GiftHeaderAndTemplateWidget2({Key? key, required this.titleText, this.isTabRequired=true, required this.content }) : super(key: key);
+  const GiftHeaderAndTemplateWidget2({Key? key, required this.titleText, this.isTabRequired=true, required this.content, this.bottomNavBarWidget }) : super(key: key);
 
  @override
   Widget build(BuildContext context) {
@@ -368,7 +369,7 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
           ),
         ),
       ),
-      // bottomNavigationBar: GiftBottomNavBar(isDeposit: true,),
+      bottomNavigationBar: bottomNavBarWidget,
     );
   }
 }

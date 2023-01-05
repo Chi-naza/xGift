@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/utils.dart';
 
 class IntroScreen extends StatelessWidget {
+  
+  const IntroScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -10,33 +16,33 @@ class IntroScreen extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
 
+    // Instance of auth Controller
+    var authController = Get.find<AuthController>();
+
     return Scaffold(
         body: SingleChildScrollView(
           child: Container(
           width: double.infinity,
           child: Container(
-            // iphone13promax15qT (1:2)
             padding: EdgeInsets.fromLTRB(34*fem, 237*fem, 35*fem, 152*fem),
             width: double.infinity,
-            decoration: BoxDecoration (
+            decoration: const BoxDecoration (
               color: Color(0xffffffff),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  // asset31nmo (1:8)
+                  // Assets / Images Container
                   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 65*fem),
                   width: double.infinity,
                   height: 238*fem,
                   child: Container(
-                    // vectorfah (1:10)
                     width: double.infinity,
                     height: double.infinity,
                     child: Stack(
                       children: [
                         Positioned(
-                          // vectorMrq (1:11)
                           left: 13.7472229004*fem,
                           top: 25.6721496582*fem,
                           child: Align(
@@ -52,7 +58,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorDXf (1:12)
                           left: 18.9448699951*fem,
                           top: 23.4804992676*fem,
                           child: Align(
@@ -68,7 +73,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorH1j (1:13)
                           left: 44.5560150146*fem,
                           top: 180.7635803223*fem,
                           child: Align(
@@ -84,7 +88,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorx7s (1:14)
                           left: 47.5907745361*fem,
                           top: 181.4561004639*fem,
                           child: Align(
@@ -100,7 +103,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorpQy (1:15)
                           left: 54.3701324463*fem,
                           top: 197.3719024658*fem,
                           child: Align(
@@ -116,7 +118,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorTiq (1:16)
                           left: 61.7270507812*fem,
                           top: 205.7237243652*fem,
                           child: Align(
@@ -132,7 +133,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector84H (1:17)
                           left: 56.7679519653*fem,
                           top: 217.9873657227*fem,
                           child: Align(
@@ -148,7 +148,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorhmb (1:18)
                           left: 60.1844482422*fem,
                           top: 194.7712097168*fem,
                           child: Align(
@@ -164,7 +163,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorP8d (1:19)
                           left: 65.1475830078*fem,
                           top: 199.9100799561*fem,
                           child: Align(
@@ -180,7 +178,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorfbw (1:20)
                           left: 51.9686126709*fem,
                           top: 208.1708526611*fem,
                           child: Align(
@@ -196,7 +193,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorYQq (1:21)
                           left: 59.3082275391*fem,
                           top: 212.2461090088*fem,
                           child: Align(
@@ -212,7 +208,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorEoT (1:22)
                           left: 49.3875732422*fem,
                           top: 215.7011108398*fem,
                           child: Align(
@@ -228,7 +223,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorXGm (1:23)
                           left: 66.6125564575*fem,
                           top: 192.538192749*fem,
                           child: Align(
@@ -244,7 +238,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorok5 (1:24)
                           left: 55.1376190186*fem,
                           top: 200.763458252*fem,
                           child: Align(
@@ -260,7 +253,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorJgq (1:25)
                           left: 18.6155700684*fem,
                           top: 177.7585296631*fem,
                           child: Align(
@@ -276,7 +268,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorCnD (1:26)
                           left: 21.3289337158*fem,
                           top: 179.280166626*fem,
                           child: Align(
@@ -292,7 +283,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector3H3 (1:27)
                           left: 299.9889526367*fem,
                           top: 176.0726470947*fem,
                           child: Align(
@@ -308,7 +298,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorkBT (1:28)
                           left: 317.2143554688*fem,
                           top: 202.3171691895*fem,
                           child: Align(
@@ -324,7 +313,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorRoP (1:29)
                           left: 319.2732543945*fem,
                           top: 204.0629577637*fem,
                           child: Align(
@@ -356,7 +344,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectormVs (1:31)
                           left: 288.533416748*fem,
                           top: 209.6784210205*fem,
                           child: Align(
@@ -372,7 +359,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector9WR (1:32)
                           left: 294.8511352539*fem,
                           top: 220.8128814697*fem,
                           child: Align(
@@ -388,7 +374,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorxyf (1:33)
                           left: 294.6200561523*fem,
                           top: 198.946105957*fem,
                           child: Align(
@@ -404,7 +389,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorV6R (1:34)
                           left: 285.8236999512*fem,
                           top: 204.4147949219*fem,
                           child: Align(
@@ -420,7 +404,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector7db (1:35)
                           left: 302.1567382812*fem,
                           top: 210.8945922852*fem,
                           child: Align(
@@ -436,7 +419,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorN3j (1:36)
                           left: 291.0632019043*fem,
                           top: 215.7026672363*fem,
                           child: Align(
@@ -452,7 +434,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorF7X (1:37)
                           left: 304.2873840332*fem,
                           top: 217.7587432861*fem,
                           child: Align(
@@ -468,7 +449,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectoruhs (1:38)
                           left: 285.1563720703*fem,
                           top: 197.7275543213*fem,
                           child: Align(
@@ -484,7 +464,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectornWm (1:39)
                           left: 298.1997375488*fem,
                           top: 204.1535186768*fem,
                           child: Align(
@@ -500,7 +479,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector3Sh (1:40)
                           left: 313.1700439453*fem,
                           top: 177.2568969727*fem,
                           child: Align(
@@ -516,7 +494,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorvmP (1:41)
                           left: 314.0205383301*fem,
                           top: 178.8751220703*fem,
                           child: Align(
@@ -532,7 +509,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorutD (1:42)
                           left: 308.5995178223*fem,
                           top: 179.6613006592*fem,
                           child: Align(
@@ -548,7 +524,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorh9s (1:43)
                           left: 5.4959411621*fem,
                           top: 201.1310272217*fem,
                           child: Align(
@@ -564,7 +539,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorxrV (1:44)
                           left: 7.7490692139*fem,
                           top: 203.2231903076*fem,
                           child: Align(
@@ -580,7 +554,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorSFs (1:45)
                           left: 0*fem,
                           top: 218.8572387695*fem,
                           child: Align(
@@ -596,7 +569,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorhSh (1:46)
                           left: 236.2461395264*fem,
                           top: 0.0024414062*fem,
                           child: Align(
@@ -612,7 +584,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorMXF (1:47)
                           left: 47.11668396*fem,
                           top: 32.5816955566*fem,
                           child: Align(
@@ -628,7 +599,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector2dP (1:48)
                           left: 0*fem,
                           top: 0*fem,
                           child: Align(
@@ -644,7 +614,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorWHf (1:49)
                           left: 247.924911499*fem,
                           top: 139.9180755615*fem,
                           child: Align(
@@ -660,7 +629,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectoryww (1:50)
                           left: 245.5465545654*fem,
                           top: 141.5148162842*fem,
                           child: Align(
@@ -676,7 +644,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectors1j (1:51)
                           left: 0*fem,
                           top: 0*fem,
                           child: Align(
@@ -692,7 +659,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorZQM (1:52)
                           left: 0*fem,
                           top: 0*fem,
                           child: Align(
@@ -708,7 +674,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorreM (1:53)
                           left: 74.0025787354*fem,
                           top: 103.9691162109*fem,
                           child: Align(
@@ -724,7 +689,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorxBb (1:54)
                           left: 72.2675704956*fem,
                           top: 105.1336669922*fem,
                           child: Align(
@@ -740,7 +704,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectoreKK (1:55)
                           left: 0*fem,
                           top: 0*fem,
                           child: Align(
@@ -756,7 +719,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorw3X (1:56)
                           left: 116.9849243164*fem,
                           top: 4.3534851074*fem,
                           child: Align(
@@ -772,7 +734,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector1p5 (1:57)
                           left: 119.1233139038*fem,
                           top: 6.4934692383*fem,
                           child: Align(
@@ -788,7 +749,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectortss (1:58)
                           left: 162.1116790771*fem,
                           top: 7.0097045898*fem,
                           child: Align(
@@ -804,7 +764,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectornTT (1:59)
                           left: 123.7465209961*fem,
                           top: 210.9155883789*fem,
                           child: Align(
@@ -820,7 +779,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorpf3 (1:60)
                           left: 200.7482452393*fem,
                           top: 7.600982666*fem,
                           child: Align(
@@ -836,7 +794,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorJ4R (1:61)
                           left: 147.639251709*fem,
                           top: 210.9155883789*fem,
                           child: Align(
@@ -852,7 +809,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectornEV (1:62)
                           left: 226.1735534668*fem,
                           top: 8.9080810547*fem,
                           child: Align(
@@ -868,7 +824,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorrVF (1:63)
                           left: 124.3748397827*fem,
                           top: 21.4838256836*fem,
                           child: Align(
@@ -884,7 +839,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorYcy (1:64)
                           left: 124.3748397827*fem,
                           top: 24.7298278809*fem,
                           child: Align(
@@ -900,7 +854,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorduK (1:65)
                           left: 131.8877105713*fem,
                           top: 27.4880981445*fem,
                           child: Align(
@@ -916,7 +869,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorvNd (1:66)
                           left: 154.2448883057*fem,
                           top: 30.8466186523*fem,
                           child: Align(
@@ -932,7 +884,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector1Q5 (1:67)
                           left: 154.2448883057*fem,
                           top: 36.9379272461*fem,
                           child: Align(
@@ -948,7 +899,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector6gR (1:68)
                           left: 149.9950866699*fem,
                           top: 52.6636352539*fem,
                           child: Align(
@@ -964,7 +914,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorc8y (1:69)
                           left: 192.1376800537*fem,
                           top: 79.7165222168*fem,
                           child: Align(
@@ -980,7 +929,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorUws (1:70)
                           left: 132.0691680908*fem,
                           top: 139.2697753906*fem,
                           child: Align(
@@ -996,7 +944,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorak1 (1:71)
                           left: 132.0691680908*fem,
                           top: 95.9674530029*fem,
                           child: Align(
@@ -1012,7 +959,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorTYu (1:72)
                           left: 149.9950866699*fem,
                           top: 155.5192260742*fem,
                           child: Align(
@@ -1028,7 +974,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector9Aq (1:73)
                           left: 132.4200592041*fem,
                           top: 189.8594512939*fem,
                           child: Align(
@@ -1044,7 +989,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorq3f (1:74)
                           left: 217.5719909668*fem,
                           top: 52.6636352539*fem,
                           child: Align(
@@ -1060,7 +1004,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vector7ms (1:75)
                           left: 217.5719909668*fem,
                           top: 79.7165222168*fem,
                           child: Align(
@@ -1076,7 +1019,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorzKs (1:76)
                           left: 217.5719909668*fem,
                           top: 155.5192260742*fem,
                           child: Align(
@@ -1092,7 +1034,6 @@ class IntroScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          // vectorsPf (1:77)
                           left: 128.8270874023*fem,
                           top: 139.2697753906*fem,
                           child: Align(
@@ -3180,12 +3121,17 @@ class IntroScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Inkwell to Enable Tapping on the Button
                 InkWell(
                   onTap: (){
-                    print("I am getting started");
+                    if(authController.isUserLoggedIn()){
+                      authController.goToTransactionHistoryScreen();
+                    }else{
+                      Get.offNamed(SignInScreen.routeName);
+                    }
                   },
                   child: Container(
-                    // autogroupaewutoT (EnvxDf3F3NhKJkpVemAEWu)
+                    // THE BUTTON 'Get Started'
                     margin: EdgeInsets.fromLTRB(12*fem, 0*fem, 12*fem, 0*fem),
                     width: double.infinity,
                     height: 60*fem,

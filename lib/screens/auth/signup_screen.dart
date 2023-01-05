@@ -1,8 +1,39 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
+import 'package:myapp/utilities/user_feedback.dart';
 import 'package:myapp/utils.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+
+   static const String routeName = '/sign-up';
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+
+   // input controllers
+    var fnameController = TextEditingController();
+    var surnameController = TextEditingController();
+    var emailController = TextEditingController();
+    var phoneController = TextEditingController();
+    var pswd1Controller = TextEditingController();
+    var pswq2Controller = TextEditingController();
+
+    // form key
+    var signUpFormKey = GlobalKey<FormState>();
+
+  // instance of authController
+  var authController = Get.find<AuthController>();
+
+  // country picked variable
+  String pickedCountry = '';
 
   @override
   Widget build(BuildContext context) {
@@ -11,22 +42,14 @@ class SignUpScreen extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
 
-    var fnameController = TextEditingController();
-    var LnameController = TextEditingController();
-    var emailController = TextEditingController();
-    var phoneController = TextEditingController();
-    var pswd1Controller = TextEditingController();
-    var pswq2Controller = TextEditingController();
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
           child: Container(
-            // iphone13promax2n1o (1:202)
             padding: EdgeInsets.fromLTRB(38*fem, 0*fem, 0*fem, 128*fem),
             width: double.infinity,
-            decoration: BoxDecoration (
+            decoration: const BoxDecoration (
               color: Color(0xffffffff),
             ),
             child: Column(
@@ -40,7 +63,7 @@ class SignUpScreen extends StatelessWidget {
                     children: [
                       // Line below signIn and SignUp text
                       Positioned(
-                        // line1unZ (1:415)
+                        // line
                         left: 0*fem,
                         top: 207*fem,
                         child: Align(
@@ -56,7 +79,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        // rectangle9Nw3 (1:416)
+                        // rectangle
                         left: 0*fem,
                         top: 170*fem,
                         child: Align(
@@ -72,7 +95,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        // signupgB3 (1:414)
+                        // signup Text
                         left: 52*fem,
                         top: 180*fem,
                         child: Align(
@@ -94,7 +117,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        // signinkwb (1:417)
+                        // signin TextButton
                         left: 243*fem,
                         top: 180*fem,
                         child: Align(
@@ -102,7 +125,10 @@ class SignUpScreen extends StatelessWidget {
                             width: 52*fem,
                             height: 19*fem,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // go to sign in
+                                Get.toNamed(SignInScreen.routeName);
+                              },
                               style: TextButton.styleFrom (
                                 padding: EdgeInsets.zero,
                               ),
@@ -171,66 +197,77 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                // First Name & Last Name here             
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'First Name',
-                        inputController: fnameController,
-                      )
-                    ),
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Surname',
-                        inputController: LnameController,
-                      )
-                    ),
-                  ],
-                ),
-                // Email here
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Email Address',
-                        inputController: emailController,
-                      )
-                    ),                  
-                  ],
-                ),
-                // Phone Number here
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Phone Number',
-                        inputController: phoneController,
-                      )
-                    ),                  
-                  ],
-                ),
-                // Password & Confirm Password here             
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Password',
-                        inputController: pswd1Controller,
-                      )
-                    ),
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Confirm Password',
-                        inputController: pswq2Controller,
-                      )
-                    ),
-                  ],
-                ),
+                ),                            
+                Form(
+                  key: signUpFormKey,
+                  child: Column(
+                    children: [
+                      // First Name & Last Name here 
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'First Name',
+                              inputController: fnameController,
+                            )
+                          ),
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Surname',
+                              inputController: surnameController,
+                            )
+                          ),
+                        ],
+                      ),
+                      // Email here
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Email Address',
+                              inputController: emailController,
+                              isEmail: true,
+                            )
+                          ),                  
+                        ],
+                      ),
+                      // Phone Number here
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Phone Number',
+                              inputController: phoneController,
+                              isNumber: true,
+                            )
+                          ),                  
+                        ],
+                      ),
+                      // Password & Confirm Password here             
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Password',
+                              inputController: pswd1Controller,
+                              isPassword: true,
+                            )
+                          ),
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Confirm Password',
+                              inputController: pswq2Controller,
+                              isPassword: true,
+                            )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),               
                 // Choose country section
                 Container(
-                  // countryctZ (1:418)
+                  // country overLay Text
                   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 294*fem, 3*fem),
                   child: Text(
                     'Country',
@@ -244,97 +281,146 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  // autogroup7koouMs (Enw3aqS5Dm9fyAPQda7Koo)
-                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 32*fem, 61*fem),
-                  padding: EdgeInsets.fromLTRB(18*fem, 18*fem, 26*fem, 14*fem),
-                  decoration: BoxDecoration (
-                    color: Color(0xfffff1de),
-                    borderRadius: BorderRadius.circular(8*fem),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        // line2ZxD (1:422)
-                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 11*fem, 0*fem),
-                        width: 73*fem,
-                        height: 1*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xfff26b02),
-                        ),
-                      ),
-                      Container(
-                        // choosecountry5Qm (1:419)
-                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 11*fem, 0*fem),
-                        child: Text(
-                          'Choose Country',
-                          textAlign: TextAlign.center,
-                          style: SafeGoogleFont (
-                            'Poppins',
-                            fontSize: 15*ffem,
-                            fontWeight: FontWeight.w700,
-                            height: 1.2449999491*ffem/fem,
+                InkWell(
+                  onTap: () {
+                    print('Choose Country');
+                    showCountryPicker(
+                      context: context, 
+                      showPhoneCode: false,
+                      onSelect: (Country country){
+                        setState(() {
+                          pickedCountry = country.displayNameNoCountryCode;
+                        });
+                        print('Country picked is ${country.displayName}');
+                      }
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 32*fem, 61*fem),
+                    padding: EdgeInsets.fromLTRB(18*fem, 18*fem, 26*fem, 14*fem),
+                    decoration: BoxDecoration (
+                      color: Color(0xfffff1de),
+                      borderRadius: BorderRadius.circular(8*fem),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          // line2ZxD (1:422)
+                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 11*fem, 0*fem),
+                          width: 73*fem,
+                          height: 1*fem,
+                          decoration: BoxDecoration (
                             color: Color(0xfff26b02),
                           ),
                         ),
-                      ),
-                      Container(
-                        // line3m2h (1:423)
-                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 7*fem, 0*fem),
-                        width: 52*fem,
-                        height: 1*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xfff26b02),
+                        Container(
+                          // choose country text
+                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 11*fem, 0*fem),
+                          width: GiftDim.size100*1.2,
+                          child: Text(
+                            pickedCountry.isEmpty? 'Choose Country' : pickedCountry,
+                            textAlign: TextAlign.center,
+                            style: SafeGoogleFont (
+                              'Poppins',
+                              fontSize: 15*ffem,
+                              fontWeight: FontWeight.w700,
+                              height: 1.2449999491*ffem/fem,
+                              color: Color(0xfff26b02),
+                            ),
+                          ),
                         ),
-                      ),
-                      Container(
-                        // polygon1Gk9 (1:420)
-                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 2*fem),
-                        width: 21*fem,
-                        height: 13*fem,
-                        child: Image.asset(
-                          'assets/page-1/images/polygon-1-TQD.png',
+                        Container(
+                          // line
+                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 7*fem, 0*fem),
+                          width: 52*fem,
+                          height: 1*fem,
+                          decoration: BoxDecoration (
+                            color: Color(0xfff26b02),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 2*fem),
                           width: 21*fem,
                           height: 13*fem,
+                          child: Image.asset(
+                            'assets/page-1/images/polygon-1-TQD.png',
+                            width: 21*fem,
+                            height: 13*fem,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 InkWell(
                   onTap: (() {
-                    print('Sign Up Now');
+                    var pswd1 = pswd1Controller.text.trim();
+                    var pswd2 = pswq2Controller.text.trim();
+                    var firstName = fnameController.text.trim();
+                    var surName = surnameController.text.trim();
+                    var email = emailController.text.trim();
+                    var phoneNumber = phoneController.text.trim();
+
+                    // if pswd1 != pswd2 do not submit the form, show a snackbar
+                    if(pswd1 != pswd2){
+                      UserFeedBack.showErrorSnackBar('Password Mismatch');
+                    }else{ 
+                       if(signUpFormKey.currentState!.validate()){
+                          // password less than 8 chars
+                          if(pswd1.length < 8){
+                            UserFeedBack.showErrorSnackBar('Your password should be at least 8 characters long!');
+                            return;
+                          }
+                          // If user has not picked a country
+                          if(pickedCountry.isEmpty){
+                            UserFeedBack.showErrorSnackBar('You have not picked a country. Click on the CHOOSE COUNTRY to select your country of origin');
+                          }else{
+                            // calling our sign up function from auth controller
+                            authController.signUpUser(
+                              email: email, 
+                              password: pswd1, 
+                              fName: firstName, 
+                              surName: surName, 
+                              phoneNumber: phoneNumber, 
+                              country: pickedCountry
+                            );
+                          }                         
+                        }
+                    } 
                   }),
-                  child: Container(
-                    // Get started button here
-                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 39*fem, 5*fem),
-                    width: 335*fem,
-                    height: 60*fem,
-                    decoration: BoxDecoration (
-                      color: Color(0xfff99601),
-                      borderRadius: BorderRadius.circular(9*fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Get Started',
-                        style: SafeGoogleFont (
-                          'Poppins',
-                          fontSize: 16*ffem,
-                          fontWeight: FontWeight.w700,
-                          height: 1.5*ffem/fem,
-                          color: Color(0xffffffff),
+                  child: Obx(() {
+                      return Container(
+                        // Sign UP button here
+                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 39*fem, 5*fem),
+                        width: 335*fem,
+                        height: 60*fem,
+                        decoration: BoxDecoration (
+                          color: Color(0xfff99601),
+                          borderRadius: BorderRadius.circular(9*fem),
                         ),
-                      ),
-                    ),
+                        child: Center(
+                          child: authController.isLoading.value? const CircularProgressIndicator.adaptive(backgroundColor: Colors.white) : Text(
+                            'Sign Up',
+                            style: SafeGoogleFont (
+                              'Poppins',
+                              fontSize: 16*ffem,
+                              fontWeight: FontWeight.w700,
+                              height: 1.5*ffem/fem,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                   ),
                 ),
                 Container(
-                  // signinCGR (1:450)
+                  // signin textButton
                   margin: EdgeInsets.fromLTRB(240*fem, 0*fem, 0*fem, 0*fem),
                   child: TextButton(
                     onPressed: () {
-                      print("go to sign in screen");
+                      authController.goToLoginScreen();
                     },
                     style: TextButton.styleFrom (
                       padding: EdgeInsets.zero,

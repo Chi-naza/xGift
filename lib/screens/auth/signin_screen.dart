@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/screens/auth/signup_screen.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
 import 'package:myapp/utils.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+
+  static const String routeName = '/sign-in';
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+
+  // input controllers
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+
+  // form key
+  var signInFormKey = GlobalKey<FormState>();
+
+  // instance of authController
+  AuthController authController = Get.find<AuthController>();
+
 
  @override
   Widget build(BuildContext context) {
@@ -11,9 +33,6 @@ class SignInScreen extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
 
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -21,7 +40,7 @@ class SignInScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.fromLTRB(38*fem, 0*fem, 0*fem, 124*fem),
             width: double.infinity,
-            decoration: BoxDecoration (
+            decoration: const BoxDecoration (
               color: Color(0xffffffff),
             ),
             child: Column(
@@ -74,7 +93,10 @@ class SignInScreen extends StatelessWidget {
                             width: 58*fem,
                             height: 19*fem,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // Go to signup screen on Tap
+                                Get.toNamed(SignUpScreen.routeName);
+                              },
                               style: TextButton.styleFrom (
                                 padding: EdgeInsets.zero,
                               ),
@@ -167,29 +189,37 @@ class SignInScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Email
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Email Address',
-                        inputController: emailController,
-                      )
-                    ),                  
-                  ],
+                Form(
+                  key: signInFormKey,
+                  child: Column(
+                    children: [
+                      // Email
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Email Address',
+                              inputController: emailController,
+                              isEmail: true,
+                            )
+                          ),                  
+                        ],
+                      ),
+                      // Password
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InputAndTextFieldWidget(
+                              overLayText: 'Password',
+                              inputController: passwordController,
+                              isPassword: true,
+                            )
+                          ),                  
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                // Password
-                Row(
-                  children: [
-                    Expanded(
-                      child: InputAndTextFieldWidget(
-                        overLayText: 'Password',
-                        inputController: passwordController,
-                      )
-                    ),                  
-                  ],
-                ),
-               
                // Forgot Password text
                 Container(
                   // forgotpassword
@@ -208,37 +238,46 @@ class SignInScreen extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: (() {
-                    print('Sign In Tapped ');
+                    var email = emailController.text.trim();
+                    var pswd = passwordController.text.trim();
+                    
+                    if(signInFormKey.currentState!.validate()){
+                      // calling the sign in function from auth controller
+                      authController.signInUser(email, pswd);
+                    }
                   }),
-                  child: Container(
-                    // autogroupq7hjmMK (Enw5ENXDi6ofWhd8Wfq7Hj)
-                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 39.25*fem, 9*fem),
-                    width: 335*fem,
-                    height: 60*fem,
-                    decoration: BoxDecoration (
-                      color: Color(0xfff99601),
-                      borderRadius: BorderRadius.circular(9*fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Get Started',
-                        style: SafeGoogleFont (
-                          'Poppins',
-                          fontSize: 16*ffem,
-                          fontWeight: FontWeight.w700,
-                          height: 1.5*ffem/fem,
-                          color: Color(0xffffffff),
+                  child: Obx(() {
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 39.25*fem, 9*fem),
+                        width: 335*fem,
+                        height: 60*fem,
+                        decoration: BoxDecoration (
+                          color: Color(0xfff99601),
+                          borderRadius: BorderRadius.circular(9*fem),
                         ),
-                      ),
-                    ),
+                        child: Center(
+                          child: authController.isLoading.value? const CircularProgressIndicator.adaptive(backgroundColor: Colors.white) : Text(
+                            'Sign In',
+                            style: SafeGoogleFont (
+                              'Poppins',
+                              fontSize: 16*ffem,
+                              fontWeight: FontWeight.w700,
+                              height: 1.5*ffem/fem,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                   ),
                 ),
                 Container(
-                  // signupa3s (1:449)
+                  // signup textButton
                   margin: EdgeInsets.fromLTRB(232.75*fem, 0*fem, 0*fem, 0*fem),
                   child: TextButton(
                     onPressed: () {
-                      print(' Sign up screen should be loaded');
+                      // Go to signup screen on Tap
+                      Get.toNamed(SignUpScreen.routeName);
                     },
                     style: TextButton.styleFrom (
                       padding: EdgeInsets.zero,

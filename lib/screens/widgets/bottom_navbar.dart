@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myapp/constants/app_colors.dart';
 import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/screens/airtime/buy_airtime_screen.dart';
+import 'package:myapp/screens/data/buy_data_screen.dart';
+import 'package:myapp/screens/deposit/deposit_screen.dart';
 import 'package:myapp/utils.dart';
 
-class GiftBottomNavBar extends StatelessWidget {
+class GiftBottomNavBar extends GetView<AuthController> {
+
   final bool isHome;
   final bool isData;
   final bool isAirtime;
@@ -16,6 +22,7 @@ class GiftBottomNavBar extends StatelessWidget {
     this.isAirtime=false, 
     this.isDeposit=false
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,7 @@ class GiftBottomNavBar extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: (() {
-                print('home');
+                controller.goToTransactionHistoryScreen();
               }),
               child: Container(
                 color: isHome? GiftColors.mainColor.withOpacity(0.2) : null,
@@ -82,7 +89,7 @@ class GiftBottomNavBar extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () {
-                print('data');
+                Get.to(BuyDataScreen());
               },
               child: Container(
                 color: isData? GiftColors.mainColor.withOpacity(0.2) : null,
@@ -120,7 +127,7 @@ class GiftBottomNavBar extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: (() {
-                print('Airtime');
+                Get.to(BuyAirtimeScreen());
               }),
               child: Container(
                 color: isAirtime? GiftColors.mainColor.withOpacity(0.2) : null,
@@ -158,7 +165,7 @@ class GiftBottomNavBar extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: (() {
-                print('deposit');
+                Get.to(const DepositScreen());
               }),
               child: Container(
                 color: isDeposit? GiftColors.mainColor.withOpacity(0.2) : null,
@@ -196,7 +203,7 @@ class GiftBottomNavBar extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: (() {
-                print('logged out');
+                controller.signOutUser();
               }),
               child: Container(
                 padding: EdgeInsets.all(GiftDim.size10),
