@@ -71,7 +71,7 @@ class AuthController extends GetxController {
 
 
   // A function which registers  a user when called
-  Future<void> signUpUser({ required String email, required String password, required String fName, required String surName, required String phoneNumber, required String country}) async{
+  Future<void> signUpUser({ required String email, required String password, required String fName, required String surName, required String phoneNumber, required String country, required String ISOcode}) async{
     // creating empty image String when user first signs Up
     String imageUrl = '';
     try{
@@ -81,7 +81,7 @@ class AuthController extends GetxController {
       await auth.createUserWithEmailAndPassword(email: email, password: password);
       await Future.delayed(const Duration(seconds: 1));
       // save user details in the Database
-      await saveUserInFireStore(email.toLowerCase(), fName, surName, phoneNumber, country, imageUrl);
+      await saveUserInFireStore(email.toLowerCase(), fName, surName, phoneNumber, country, imageUrl, ISOcode);
       // delay before next API call
       await Future.delayed(const Duration(seconds: 1));
       // Get details of user after signup
@@ -146,7 +146,7 @@ class AuthController extends GetxController {
 
 
   // Function which creates a user in the fireStore DB when registration is done
-  Future<void> saveUserInFireStore(String email, String fn, String ln, String phone, String selectedCountry, String imageUrl) async {
+  Future<void> saveUserInFireStore(String email, String fn, String ln, String phone, String selectedCountry, String imageUrl, String isoCode) async {
     UserModel userModel = UserModel(
       firstName: fn, 
       surname: ln, 
@@ -155,6 +155,7 @@ class AuthController extends GetxController {
       country: selectedCountry, 
       dateRegistered: DateFormat.yMMMMEEEEd().format(DateTime.now()), // eg Wednesday, January 4, 2023
       imageUrl: imageUrl,
+      ISOcode: isoCode,
     );
 
     // serializing it to Json and sending it to user collection in fireStore

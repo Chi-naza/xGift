@@ -6,7 +6,7 @@ import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/screens/airtime/buy_airtime_screen.dart';
 import 'package:myapp/screens/data/buy_data_screen.dart';
 import 'package:myapp/screens/deposit/deposit_screen.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class GiftBottomNavBar extends GetView<AuthController> {
 

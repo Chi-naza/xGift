@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/controllers/top_up_controller.dart';
 import 'package:myapp/screens/auth/signin_screen.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class IntroScreen extends StatelessWidget {
   
@@ -18,6 +19,9 @@ class IntroScreen extends StatelessWidget {
 
     // Instance of auth Controller
     var authController = Get.find<AuthController>();
+
+    // Instance of topUpController
+    var topUpController = Get.find<TopUpController>();
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -3124,11 +3128,24 @@ class IntroScreen extends StatelessWidget {
                 // Inkwell to Enable Tapping on the Button
                 InkWell(
                   onTap: (){
-                    if(authController.isUserLoggedIn()){
-                      authController.goToTransactionHistoryScreen();
-                    }else{
-                      Get.offNamed(SignInScreen.routeName);
-                    }
+                    topUpController.deciferThisNumber('070671719726', 'NG');
+                    // topUpController.makeATopUp(
+                    //   operatorID: '340', 
+                    //   amount: '100', 
+                    //   recipientEmail: 'client@gmail.com', 
+                    //   recipientPhoneNumber: '09039427144', 
+                    //   recipientCountryCode: 'NG', 
+                    //   senderCountryCode: 'NG', 
+                    //   senderPhoneNumber: '07067179726'
+                    // );
+                    // topUpController.fetchAvailableOperators('NG');
+                    // topUpController.fetchDetailsofACountry('NG');
+                    // topUpController.getAccessToken();
+                    // if(authController.isUserLoggedIn()){
+                    //   authController.goToTransactionHistoryScreen();
+                    // }else{
+                    //   Get.offNamed(SignInScreen.routeName);
+                    // }
                   },
                   child: Container(
                     // THE BUTTON 'Get Started'
@@ -3156,7 +3173,7 @@ class IntroScreen extends StatelessWidget {
               ],
             ),
           ),
-              ),
+          ),
         ),
     );
   }

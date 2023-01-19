@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/screens/auth/signup_screen.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class SignInScreen extends StatefulWidget {
 

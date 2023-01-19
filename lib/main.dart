@@ -11,7 +11,7 @@ import 'package:myapp/screens/test.dart';
 import 'package:myapp/screens/widgets/header_n_template_widget2.dart';
 import 'package:myapp/screens/widgets/transaction_history_card.dart';
 
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 
 Future<void> main() async {

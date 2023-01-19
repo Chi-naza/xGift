@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/constants/app_dimensions.dart';
-import 'package:myapp/screens/widgets/bottom_navbar.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
   final String titleText;

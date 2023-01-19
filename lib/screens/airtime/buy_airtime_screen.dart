@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/screens/widgets/choose_network_widget.dart';
 import 'package:myapp/screens/widgets/header_n_template_widget.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class BuyAirtimeScreen extends StatefulWidget {
 

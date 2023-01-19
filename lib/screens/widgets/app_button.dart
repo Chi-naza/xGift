@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/constants/app_dimensions.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class AppButton extends StatelessWidget {
   final String text;

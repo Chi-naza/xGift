@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class GiftHeaderAndTemplateWidget extends StatelessWidget {
   final Widget inputAreaContent;

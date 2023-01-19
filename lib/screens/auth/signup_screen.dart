@@ -6,7 +6,7 @@ import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
 import 'package:myapp/utilities/user_feedback.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
 
@@ -34,6 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // country picked variable
   String pickedCountry = '';
+  String isoCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -289,9 +290,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       showPhoneCode: false,
                       onSelect: (Country country){
                         setState(() {
-                          pickedCountry = country.displayNameNoCountryCode;
+                          pickedCountry = country.name;
+                          isoCode = country.countryCode;
                         });
-                        print('Country picked is ${country.displayName}');
+                        print('Country picked is ${country.name}');
+                        print('Country CODE picked is ${country.countryCode}');
                       }
                     );
                   },
@@ -373,7 +376,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return;
                           }
                           // If user has not picked a country
-                          if(pickedCountry.isEmpty){
+                          if(pickedCountry.isEmpty || isoCode.isEmpty){
                             UserFeedBack.showErrorSnackBar('You have not picked a country. Click on the CHOOSE COUNTRY to select your country of origin');
                           }else{
                             // calling our sign up function from auth controller
@@ -383,7 +386,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fName: firstName, 
                               surName: surName, 
                               phoneNumber: phoneNumber, 
-                              country: pickedCountry
+                              country: pickedCountry,
+                              ISOcode: isoCode
                             );
                           }                         
                         }

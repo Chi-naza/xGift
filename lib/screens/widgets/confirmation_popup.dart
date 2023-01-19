@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/constants/app_dimensions.dart';
 import 'package:myapp/screens/widgets/app_button.dart';
-import 'package:myapp/utils.dart';
+import 'package:myapp/utilities/utils.dart';
 
 class ConfirmationPopup extends StatelessWidget {
   final String amount;
