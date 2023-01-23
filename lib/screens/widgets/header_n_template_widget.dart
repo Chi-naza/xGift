@@ -41,6 +41,9 @@ class GiftHeaderAndTemplateWidget extends GetView<AuthController> {
     // instance of payment controller
     var paymentController = Get.find<PaymentController>();
 
+    // instance of auth controller
+    var authController = Get.find<AuthController>();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -55,7 +58,7 @@ class GiftHeaderAndTemplateWidget extends GetView<AuthController> {
               children: [
                 Container(
                   width: double.infinity,
-                  height: 854*fem,
+                  height: 900*fem,
                   child: Stack(
                     children: [
                       Positioned(
@@ -360,9 +363,10 @@ class GiftHeaderAndTemplateWidget extends GetView<AuthController> {
                       Positioned(
                         // The BUTTON at the end of the screen details
                         left: 22*fem,
-                        top: buttonSpaceHeight??760*fem,
+                        top: buttonSpaceHeight??790*fem,
                         child: Container(
                           width: GiftDim.size100*3.5,
+                          padding: EdgeInsets.only(right: GiftDim.size40),
                           child: buttonWidget,
                         ),
                       ),
@@ -447,16 +451,22 @@ class GiftHeaderAndTemplateWidget extends GetView<AuthController> {
                                     child: SizedBox(
                                       width: 57*fem,
                                       height: 57*fem,
-                                      child: Container(
+                                      child: authController.currentUserDetails.imageUrl == null || authController.currentUserDetails.imageUrl == ""? Container(
                                         decoration: BoxDecoration (
                                           borderRadius: BorderRadius.circular(28.5*fem),
                                           image: DecorationImage (
                                             fit: BoxFit.cover,
-                                            image: AssetImage (
-                                              'assets/page-1/images/ellipse-5-bg.png',
-                                            ),
+                                            image: AssetImage ('assets/page-1/images/ellipse-5-bg.png'),
                                           ),
                                         ),
+                                      ) : Container(
+                                        decoration: BoxDecoration (
+                                          borderRadius: BorderRadius.circular(28.5*fem),                                          
+                                          image: DecorationImage (
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(authController.currentUserDetails.imageUrl),
+                                          ),
+                                        ), 
                                       ),
                                     ),
                                   ),

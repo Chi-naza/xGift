@@ -28,6 +28,9 @@ class GiftHeaderAndTemplateWidget2 extends GetView<AuthController> {
     // instance of payment controller
     var paymentController = Get.find<PaymentController>();
 
+    // instance of auth controller
+    var authController = Get.find<AuthController>();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -387,7 +390,7 @@ class GiftHeaderAndTemplateWidget2 extends GetView<AuthController> {
                                       child: SizedBox(
                                         width: 57*fem,
                                         height: 57*fem,
-                                        child: Container(
+                                        child: authController.currentUserDetails.imageUrl == null || authController.currentUserDetails.imageUrl == ""? Container(
                                           decoration: BoxDecoration (
                                             borderRadius: BorderRadius.circular(28.5*fem),
                                             image: DecorationImage (
@@ -395,6 +398,14 @@ class GiftHeaderAndTemplateWidget2 extends GetView<AuthController> {
                                               image: AssetImage (
                                                 'assets/page-1/images/ellipse-3-bg.png',
                                               ),
+                                            ),
+                                          ),
+                                        ) : Container(
+                                          decoration: BoxDecoration (
+                                            borderRadius: BorderRadius.circular(28.5*fem),
+                                            image: DecorationImage (
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(authController.currentUserDetails.imageUrl),
                                             ),
                                           ),
                                         ),

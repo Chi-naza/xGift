@@ -342,15 +342,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        Container(
-                          // line
-                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 7*fem, 0*fem),
-                          width: 52*fem,
-                          height: 1*fem,
-                          decoration: BoxDecoration (
-                            color: Color(0xfff26b02),
-                          ),
-                        ),
+                        // Container(
+                        //   // line
+                        //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 7*fem, 0*fem),
+                        //   width: 52*fem,
+                        //   height: 1*fem,
+                        //   decoration: BoxDecoration (
+                        //     color: Color(0xfff26b02),
+                        //   ),
+                        // ),
                         Container(
                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 2*fem),
                           width: 21*fem,

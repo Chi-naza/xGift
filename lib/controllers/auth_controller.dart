@@ -119,14 +119,14 @@ class AuthController extends GetxController {
 
       await auth.signInWithEmailAndPassword(email: email, password: password);
       // delay before next API call
-      await Future.delayed(const Duration(seconds: 1));
-      // Get details of user after login
-      await fetchUserData();
+      await Future.delayed(const Duration(seconds: 1));      
       // stop loading
       isLoading.value = false;
       // show success feedback
       UserFeedBack.showSuccessSnackBar('Login successful !');
       await Future.delayed(const Duration(seconds: 1));
+      // Get details of user after login
+      await fetchUserData();
       // move into the app upon login
       goToTransactionHistoryScreen();
     }on FirebaseAuthException catch(e){
@@ -190,6 +190,7 @@ class AuthController extends GetxController {
       print(currentUser.firstName);
       print(currentUser.surname);
       print(currentUser.email);
+      print(currentUser.imageUrl);
       
 
     }catch (e){
