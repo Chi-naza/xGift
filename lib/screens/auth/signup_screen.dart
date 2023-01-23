@@ -5,6 +5,7 @@ import 'package:myapp/constants/app_dimensions.dart';
 import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
+import 'package:myapp/screens/widgets/input_n_textfield_widget2.dart';
 import 'package:myapp/utilities/user_feedback.dart';
 import 'package:myapp/utilities/utils.dart';
 
@@ -35,6 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // country picked variable
   String pickedCountry = '';
   String isoCode = '';
+  String completePhoneNumber = '';
 
   @override
   Widget build(BuildContext context) {
@@ -231,17 +233,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             )
                           ),                  
                         ],
-                      ),
-                      // Phone Number here
+                      ),                     
+                      // PHONE new
                       Row(
                         children: [
                           Expanded(
-                            child: InputAndTextFieldWidget(
-                              overLayText: 'Phone Number',
-                              inputController: phoneController,
-                              isNumber: true,
-                            )
-                          ),                  
+                            child: InputAndTextFieldWidget2(
+                              inputController: phoneController, 
+                              overLayText: 'Phone Number', 
+                              onChanged: ((phoneNumber) {
+                                // Getting the complete Number 
+                                completePhoneNumber = phoneNumber.completeNumber;
+                                // testing
+                                print(phoneNumber.completeNumber);
+                              })
+                            ),
+                          )
                         ],
                       ),
                       // Password & Confirm Password here             
@@ -293,8 +300,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           pickedCountry = country.name;
                           isoCode = country.countryCode;
                         });
+                        // testing
                         print('Country picked is ${country.name}');
                         print('Country CODE picked is ${country.countryCode}');
+                        print('Country CODE picked is ${country.phoneCode}');
                       }
                     );
                   },
@@ -385,7 +394,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               password: pswd1, 
                               fName: firstName, 
                               surName: surName, 
-                              phoneNumber: phoneNumber, 
+                              phoneNumber: completePhoneNumber, 
                               country: pickedCountry,
                               ISOcode: isoCode
                             );

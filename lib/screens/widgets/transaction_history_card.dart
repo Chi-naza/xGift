@@ -55,8 +55,10 @@ class TransactionHistoryCard extends StatelessWidget {
                         Container(
                           // Txn ID
                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 47*fem, 0*fem),
+                          width: 68*fem,                         
                           child: Text(
                             txnID, // '3485001',
+                            overflow: TextOverflow.ellipsis,
                             style: SafeGoogleFont (
                               'Poppins',
                               fontSize: 10*ffem,
@@ -68,7 +70,7 @@ class TransactionHistoryCard extends StatelessWidget {
                         ),
                         // Container of column with date and time
                         Container(
-                          margin: EdgeInsets.fromLTRB(0*fem, 5*fem, 39*fem, 0*fem),
+                          margin: EdgeInsets.fromLTRB(0*fem, 5*fem, 30*fem, 0*fem),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -103,8 +105,10 @@ class TransactionHistoryCard extends StatelessWidget {
                         Container(
                           // AMOUNT
                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 5*fem),
+                          width: 52*fem, 
                           child: Text(
                             amount, // '4,500',
+                            overflow: TextOverflow.ellipsis,
                             style: SafeGoogleFont (
                               'Poppins',
                               fontSize: 20*ffem,

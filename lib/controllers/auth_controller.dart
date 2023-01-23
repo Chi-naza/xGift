@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/models/user_model.dart';
@@ -42,6 +47,11 @@ class AuthController extends GetxController {
       user.value = currentUser;
     });
 
+    // fetch user data if user is logged in
+    if(isUserLoggedIn()){
+      await fetchUserData();
+    }
+
   }
 
 
@@ -79,17 +89,17 @@ class AuthController extends GetxController {
       isLoading.value = true;
 
       await auth.createUserWithEmailAndPassword(email: email, password: password);
-      await Future.delayed(const Duration(seconds: 1));
       // save user details in the Database
       await saveUserInFireStore(email.toLowerCase(), fName, surName, phoneNumber, country, imageUrl, ISOcode);
-      // delay before next API call
-      await Future.delayed(const Duration(seconds: 1));
       // Get details of user after signup
       await fetchUserData();
       // stop loading
       isLoading.value = false;
       UserFeedBack.showSuccessSnackBar('Registration successful!');
       await Future.delayed(const Duration(seconds: 1));
+      // signOut User
+      await auth.signOut();
+      // Go to login screen
       goToLoginScreen();
     }on FirebaseAuthException catch(e){
       AppLogger.e(e);
@@ -156,6 +166,7 @@ class AuthController extends GetxController {
       dateRegistered: DateFormat.yMMMMEEEEd().format(DateTime.now()), // eg Wednesday, January 4, 2023
       imageUrl: imageUrl,
       ISOcode: isoCode,
+      balance: 0,
     );
 
     // serializing it to Json and sending it to user collection in fireStore
@@ -186,6 +197,8 @@ class AuthController extends GetxController {
     }
   }
 
+  
+
 
 
 
@@ -194,60 +207,59 @@ class AuthController extends GetxController {
 
 
   // A function which will upload profile image when called
-  // Future<String> uploadProfileImage(PlatformFile pickedImage) async {
-  //   UploadTask? uploadTask;
+  Future<String> uploadProfileImage(PlatformFile pickedImage) async {
+    UploadTask? uploadTask;
 
-  //   final path = "profileImages/${pickedImage.name}";
-  //   final file = File(pickedImage.path!);
+    final path = "profileImages/${pickedImage.name}";
+    final file = File(pickedImage.path!);
 
-  //   // setting the upload path: path is the directory it will be uploaded to
-  //   final ref = firebaseStorageReference.child(path);
-  //   uploadTask = ref.putFile(file);
+    // setting the upload path: path is the directory it will be uploaded to
+    final ref = firebaseStorageReference.child(path);
+    uploadTask = ref.putFile(file);
 
-  //   // upload is in progress: whenComplete works like then() in 'Futures' -- you write 
-  //   // what you want happen when the future completes. 
-  //   // Our future here is the uploadTask, which uploads the pickedFile
-  //   final taskSnapshot = await uploadTask.whenComplete(() => debugPrint('Image Upload Complete') );
+    // upload is in progress: whenComplete works like then() in 'Futures' -- you write 
+    // what you want happen when the future completes. 
+    // Our future here is the uploadTask, which uploads the pickedFile
+    final taskSnapshot = await uploadTask.whenComplete(() => debugPrint('Image Upload Complete') );
 
-  //   // Getting the uploaded file's/image's download url
-  //   final imageUrl = await taskSnapshot.ref.getDownloadURL();
-  //   print("Uploaded Image's download url: $imageUrl");
+    // Getting the uploaded file's/image's download url
+    final imageUrl = await taskSnapshot.ref.getDownloadURL();
+    print("Uploaded Image's download url: $imageUrl");
 
-  //   return imageUrl;
-  // }
+    return imageUrl;
+  }
 
 
 
 
   // A function which updates user's profile image
-  // Future<void> changeProfileImage(PlatformFile pickedImage) async {
-  //   try{
-  //     // start loading
-  //     UserFeedBack.showLoading();
-  //     // Get the current user's info and data
-  //     DocumentSnapshot<Map<String, dynamic>> userData = await userFirestoreReference.doc(getCurrentUser()!.email).get();
-  //     // delay before calling the uploadTask function
-  //     await Future.delayed(const Duration(seconds: 1));
-  //     // uploading the picked image using uploadTask and storing the url in a variable
-  //     String imageUrl = await uploadProfileImage(pickedImage);
-  //     // delay
-  //     await Future.delayed(const Duration(seconds: 1));
-  //     // update the image field which is gotten from fetched user data
-  //     await userData.reference.update({'image_url' : imageUrl});
-  //     // delay before next API call
-  //     await Future.delayed(const Duration(seconds: 1));
-  //     // Get details of user after profile picture is changed
-  //     await getCurrentUserDetails();
-  //     // show success feedback
-  //     UserFeedBack.showSuccess('You have successfully changed your profile picture!');
-  //     await Future.delayed(const Duration(seconds: 2));
-  //     goToHomeScreen();
-  //   }catch (e){
-  //     AppLogger.e(e);
-  //     Get.back();
-  //     UserFeedBack.showError('Image Upload Failed !');
-  //   }
-  // }
+  Future<void> changeProfileImage(PlatformFile pickedImage) async {
+    try{
+      // start loading
+      isLoading.value = true;
+     // Get the current user's info and data
+      DocumentSnapshot<Map<String, dynamic>> userData = await userFirestoreReference.doc(getUser()!.email).get();
+      // delay before calling the uploadTask function
+      await Future.delayed(const Duration(seconds: 1));
+      // uploading the picked image using uploadTask and storing the url in a variable
+      String imageUrl = await uploadProfileImage(pickedImage);
+      // update the image field which is gotten from fetched user data
+      await userData.reference.update({'image_url' : imageUrl});
+      // delay before next API call
+      await fetchUserData();
+      // stop loading
+      isLoading.value = false;
+      // show success feedback
+      UserFeedBack.showSuccessSnackBar('You have successfully changed your profile picture!');
+      await Future.delayed(const Duration(seconds: 1));
+      goToTransactionHistoryScreen();
+    }catch (e){
+      AppLogger.e(e);
+      // stop loading
+      isLoading.value = false;
+      UserFeedBack.showErrorSnackBar('Image Upload Failed !');
+    }
+  }
 
 
 

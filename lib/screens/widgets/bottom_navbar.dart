@@ -165,7 +165,7 @@ class GiftBottomNavBar extends GetView<AuthController> {
           Expanded(
             child: InkWell(
               onTap: (() {
-                Get.to(const DepositScreen());
+                Get.toNamed(DepositScreen.routeName);
               }),
               child: Container(
                 color: isDeposit? GiftColors.mainColor.withOpacity(0.2) : null,

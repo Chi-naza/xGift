@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/controllers/payment_controller.dart';
+import 'package:myapp/screens/auth/update_profile.dart';
+import 'package:myapp/screens/deposit/deposit_screen.dart';
 import 'package:myapp/utilities/utils.dart';
 
-class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
+class GiftHeaderAndTemplateWidget2 extends GetView<AuthController> {
   final String titleText;
   final bool isTabRequired;
   final Widget content;
   final Widget? bottomNavBarWidget;
+  final bool isPurchaseScreen;
+  final VoidCallback? purchaseTapped;
+  final VoidCallback? depositTapped;
 
-  const GiftHeaderAndTemplateWidget2({Key? key, required this.titleText, this.isTabRequired=true, required this.content, this.bottomNavBarWidget }) : super(key: key);
+  const GiftHeaderAndTemplateWidget2({Key? key, required this.titleText, this.isTabRequired=true, required this.content, this.bottomNavBarWidget, this.isPurchaseScreen = false, this.purchaseTapped, this.depositTapped}) : super(key: key);
 
  @override
   Widget build(BuildContext context) {
@@ -16,6 +24,9 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
     double baseWidth = 428;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+
+    // instance of payment controller
+    var paymentController = Get.find<PaymentController>();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -70,12 +81,12 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
                                         // 7ub (1:481)
                                         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 9*fem),
                                         child: Text(
-                                          '\$',
+                                          '#', // '\$',  // Currency Symbol
                                           style: SafeGoogleFont (
                                             'Poppins',
-                                            fontSize: 32*ffem,
+                                            fontSize: 25*ffem,
                                             fontWeight: FontWeight.w700,
-                                            height: 1.5*ffem/fem,
+                                            // height: 1.5*ffem/fem,
                                             color: Color(0xffffffff),
                                           ),
                                         ),
@@ -126,7 +137,7 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
                                                       ),
                                                       children: [
                                                         TextSpan(
-                                                          text: '34,649',
+                                                          text: paymentController.moneyFormatter(controller.currentUserDetails.balance.toDouble()), // '34,649', AMOUNT
                                                           style: SafeGoogleFont (
                                                             'Impact',
                                                             fontSize: 58*ffem,
@@ -146,7 +157,7 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
                                                           ),
                                                         ),
                                                         TextSpan(
-                                                          text: '60',
+                                                          text: '00',
                                                           style: SafeGoogleFont (
                                                             'Impact',
                                                             fontSize: 32*ffem,
@@ -167,24 +178,29 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  // TOP UP container
-                                  margin: EdgeInsets.fromLTRB(65*fem, 0*fem, 106*fem, 0*fem),
-                                  width: double.infinity,
-                                  height: 29*fem,
-                                  decoration: BoxDecoration (
-                                    color: Color(0xfff8b551),
-                                    borderRadius: BorderRadius.circular(13*fem),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Top Up',
-                                      style: SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 16*ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.5*ffem/fem,
-                                        color: Color(0xffffffff),
+                                InkWell(
+                                  onTap: () {
+                                    Get.toNamed(DepositScreen.routeName);
+                                  },
+                                  child: Container(
+                                    // TOP UP container
+                                    margin: EdgeInsets.fromLTRB(65*fem, 0*fem, 106*fem, 0*fem),
+                                    width: double.infinity,
+                                    height: 29*fem,
+                                    decoration: BoxDecoration (
+                                      color: Color(0xfff8b551),
+                                      borderRadius: BorderRadius.circular(13*fem),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Top Up',
+                                        style: SafeGoogleFont (
+                                          'Poppins',
+                                          fontSize: 16*ffem,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.5*ffem/fem,
+                                          color: Color(0xffffffff),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -216,122 +232,201 @@ class GiftHeaderAndTemplateWidget2 extends StatelessWidget {
                           ),
                         ),
                         if(isTabRequired)
-                          Positioned(
-                            // ROW of Purchase and Deposit
-                            left: 15*fem,
-                            top: 423*fem,
-                            child: Container(
-                              padding: EdgeInsets.fromLTRB(72*fem, 3*fem, 3*fem, 2*fem),
-                              width: 397*fem,
-                              height: 52*fem,
-                              decoration: BoxDecoration (
-                                color: Color(0xffffffff),
-                                borderRadius: BorderRadius.circular(13*fem),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0x3f000000),
-                                    offset: Offset(0*fem, 1*fem),
-                                    blurRadius: 4*fem,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // purchase
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 49*fem, 1*fem),
-                                    child: Text(
-                                      'Purchase',
-                                      style: SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 16*ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.5*ffem/fem,
-                                        color: Color(0xfff99601),
-                                      ),
+                          if(!isPurchaseScreen)
+                            Positioned(
+                              // ROW of Purchase and Deposit
+                              left: 15*fem,
+                              top: 423*fem,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(72*fem, 3*fem, 3*fem, 2*fem),
+                                width: 397*fem,
+                                height: 52*fem,
+                                decoration: BoxDecoration (
+                                  color: Color(0xffffffff),
+                                  borderRadius: BorderRadius.circular(13*fem),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x3f000000),
+                                      offset: Offset(0*fem, 1*fem),
+                                      blurRadius: 4*fem,
                                     ),
-                                  ),
-                                  Container(
-                                    // Deposit
-                                    width: 195*fem,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration (
-                                      color: Color(0xfff99601),
-                                      borderRadius: BorderRadius.circular(13*fem),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Deposit ',
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 16*ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.5*ffem/fem,
-                                          color: Color(0xffffffff),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: purchaseTapped,
+                                      child: Container(
+                                        // purchase
+                                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 49*fem, 1*fem),
+                                        child: Text(
+                                          'Purchase',
+                                          style: SafeGoogleFont (
+                                            'Poppins',
+                                            fontSize: 16*ffem,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.5*ffem/fem,
+                                            color: Color(0xfff99601),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    InkWell(
+                                      onTap: depositTapped,
+                                      child: Container(
+                                        // Deposit
+                                        width: 195*fem,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration (
+                                          color: Color(0xfff99601),
+                                          borderRadius: BorderRadius.circular(13*fem),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Deposit ',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.5*ffem/fem,
+                                              color: Color(0xffffffff),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),                       
+                          if(isPurchaseScreen)  
+                            Positioned(
+                              // ROW of Purchase and Deposit
+                              left: 15*fem,
+                              top: 423*fem,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(3*fem, 3*fem, 68*fem, 2*fem),
+                                width: 397*fem,
+                                height: 52*fem,
+                                decoration: BoxDecoration (
+                                  color: Color(0xffffffff),
+                                  borderRadius: BorderRadius.circular(13*fem),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x3f000000),
+                                      offset: Offset(0*fem, 1*fem),
+                                      blurRadius: 4*fem,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: purchaseTapped,
+                                      child: Container(
+                                        // purchase
+                                        width: 195*fem,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration (
+                                          color: Color(0xfff99601),
+                                          borderRadius: BorderRadius.circular(13*fem),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Purchase ',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.5*ffem/fem,
+                                              color: Color(0xffffffff),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: depositTapped,
+                                      child: Container(
+                                        // Deposit
+                                        // margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 49*fem, 1*fem),
+                                        child: Text(
+                                          'Deposit',
+                                          style: SafeGoogleFont (
+                                            'Poppins',
+                                            fontSize: 18*ffem,
+                                            letterSpacing: 2,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.5*ffem/fem,
+                                            color: Color(0xfff99601),
+                                          ),
+                                        ),
+                                      ),
+                                    ),                                    
+                                  ],
+                                ),
+                              ),
+                            ),                     
                         Positioned(
                           // PROFILE PIC
                           left: 347*fem,
                           top: 23*fem,
-                          child: Container(
-                            width: 59*fem,
-                            height: 57*fem,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 2*fem,
-                                  top: 0*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 57*fem,
-                                      height: 57*fem,
-                                      child: Container(
-                                        decoration: BoxDecoration (
-                                          borderRadius: BorderRadius.circular(28.5*fem),
-                                          image: DecorationImage (
-                                            fit: BoxFit.cover,
-                                            image: AssetImage (
-                                              'assets/page-1/images/ellipse-3-bg.png',
+                          child: InkWell(
+                            onTap: () => Get.to(UpdateProfileScreen()),
+                            child: Container(
+                              width: 59*fem,
+                              height: 57*fem,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 2*fem,
+                                    top: 0*fem,
+                                    child: Align(
+                                      child: SizedBox(
+                                        width: 57*fem,
+                                        height: 57*fem,
+                                        child: Container(
+                                          decoration: BoxDecoration (
+                                            borderRadius: BorderRadius.circular(28.5*fem),
+                                            image: DecorationImage (
+                                              fit: BoxFit.cover,
+                                              image: AssetImage (
+                                                'assets/page-1/images/ellipse-3-bg.png',
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  // Online Indicator
-                                  left: 0*fem,
-                                  top: 35*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 20*fem,
-                                      height: 20*fem,
-                                      child: Container(
-                                        decoration: BoxDecoration (
-                                          borderRadius: BorderRadius.circular(10*fem),
-                                          color: Color(0xff28e824),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(0x3f000000),
-                                              offset: Offset(0*fem, 4*fem),
-                                              blurRadius: 2*fem,
-                                            ),
-                                          ],
+                                  Positioned(
+                                    // Online Indicator
+                                    left: 0*fem,
+                                    top: 35*fem,
+                                    child: Align(
+                                      child: SizedBox(
+                                        width: 20*fem,
+                                        height: 20*fem,
+                                        child: Container(
+                                          decoration: BoxDecoration (
+                                            borderRadius: BorderRadius.circular(10*fem),
+                                            color: Color(0xff28e824),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color(0x3f000000),
+                                                offset: Offset(0*fem, 4*fem),
+                                                blurRadius: 2*fem,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

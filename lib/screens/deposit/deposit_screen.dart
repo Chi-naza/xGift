@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/screens/fund_wallet/payment_screen.dart';
 import 'package:myapp/screens/widgets/app_button.dart';
+import 'package:myapp/screens/widgets/bottom_navbar.dart';
 import 'package:myapp/screens/widgets/header_n_template_widget2.dart';
 import 'package:myapp/screens/widgets/input_n_textfield_widget.dart';
-import 'package:myapp/utilities/user_feedback.dart';
 
-class DepositScreen extends StatelessWidget {
+
+class DepositScreen extends StatefulWidget {
 
   const DepositScreen({Key? key }): super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<DepositScreen> createState() => _DepositScreenState();
 
+  static const String routeName = '/deposit-screen';
+
+}
+
+class _DepositScreenState extends State<DepositScreen> {
+
+  var amountController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
     
     return GiftHeaderAndTemplateWidget2(
       titleText: 'Deposit', 
@@ -24,7 +37,7 @@ class DepositScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: InputAndTextFieldWidget(
-                    inputController: TextEditingController(),
+                    inputController: amountController,
                     overLayText: 'Amount',
                   ),
                 ),
@@ -33,9 +46,12 @@ class DepositScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: InputAndTextFieldWidget(
-                    inputController: TextEditingController(),
-                    overLayText: 'Payment Method',
+                  child: AbsorbPointer(
+                    child: InputAndTextFieldWidget(
+                      inputController: TextEditingController(),
+                      overLayText: 'Payment Method',
+                      helperText: 'PayStack',
+                    ),
                   ),
                 ),
               ],
@@ -49,9 +65,12 @@ class DepositScreen extends StatelessWidget {
                   Expanded(
                     child:  AppButton(
                       text: 'Top Up',
-                      onPressed: (){
-                        print('Deposited !');
-                        UserFeedBack.showSuccessSnackBar('Success');
+                      onPressed: (){                        
+                        if(amountController.text.trim().isEmpty || amountController.text.trim() == null){
+                          return;
+                        }else{
+                          Get.to(PaymentScreen(amount: amountController.text.trim()));
+                        }
                       },
                     ),
                   ),
@@ -61,6 +80,7 @@ class DepositScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavBarWidget: const GiftBottomNavBar(isDeposit: true),
     );
   }
 }

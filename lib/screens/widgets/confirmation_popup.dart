@@ -39,7 +39,6 @@ class ConfirmationPopup extends StatelessWidget {
             // The Texts
             SizedBox(
               width: 154*fem,
-              height: 60*fem,
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(

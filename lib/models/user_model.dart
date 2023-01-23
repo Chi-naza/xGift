@@ -9,7 +9,8 @@ class UserModel {
   String dateRegistered;
   String imageUrl;
   String ISOcode;
-  // List<SalesModel> mySales;
+  int balance;
+
 
   UserModel({
     required this.firstName,
@@ -20,7 +21,7 @@ class UserModel {
     required this.dateRegistered,
     required this.imageUrl,
     required this.ISOcode,
-    // required this.mySales,
+    required this.balance,
   });
 
 
@@ -32,7 +33,8 @@ class UserModel {
     country = snapshot['country'],
     dateRegistered = snapshot['date_registered'],
     imageUrl = snapshot['image_url'],
-    ISOcode = snapshot['ISOcode'];
+    ISOcode = snapshot['ISOcode'],
+    balance = snapshot['balance'];
     // mySales = snapshot['my_sales'] == null? [] : (snapshot['my_sales'] as List).map((e) => SalesModel.fromJson(e as Map<String, dynamic>)).toList();
 
 
@@ -45,7 +47,8 @@ class UserModel {
     country = json['country'],
     dateRegistered = json['date_registered'],
     imageUrl = json['image_url'],
-    ISOcode = json['ISOcode'];
+    ISOcode = json['ISOcode'],
+    balance = json['balance'];
     // mySales = json['my_sales'] == null? [] : (json['my_sales'] as List).map((e) => SalesModel.fromJson(e as Map<String, dynamic>)).toList();
 
 
@@ -61,7 +64,7 @@ class UserModel {
     data['date_registered'] = this.dateRegistered;
     data['image_url'] = this.imageUrl;
     data['ISOcode'] = this.ISOcode;
-    // data['my_sales'] = this.mySales;
+    data['balance'] = this.balance;
 
     return data;
   }

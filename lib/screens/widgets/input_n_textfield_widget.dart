@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/constants/app_colors.dart';
 import 'package:myapp/constants/app_dimensions.dart';
 
@@ -8,6 +9,7 @@ class InputAndTextFieldWidget extends StatelessWidget {
   final bool isPassword;
   final bool isEmail;
   final bool isNumber;
+  final String? helperText;
   
   const InputAndTextFieldWidget({
     Key? key, 
@@ -15,7 +17,8 @@ class InputAndTextFieldWidget extends StatelessWidget {
     required this.overLayText,
     this.isPassword=false,
     this.isEmail=false,
-    this.isNumber=false,
+    this.isNumber=false, 
+    this.helperText,
   }) : super(key: key);
 
   @override
@@ -76,7 +79,8 @@ class InputAndTextFieldWidget extends StatelessWidget {
                 borderSide: BorderSide(color: GiftColors.textMainColor, width: GiftDim.size3*0.7),
                 borderRadius: BorderRadius.circular(GiftDim.size10),
               ),    
-              hintText: '', 
+              hintText: helperText, 
+              hintStyle: GoogleFonts.montserrat(letterSpacing: 3, fontWeight: FontWeight.bold, color: Colors.grey.shade400, fontSize: GiftDim.size18),
               // hintStyle: const TextStyle(
               //   color: Colors.white,
               //   letterSpacing: 1,

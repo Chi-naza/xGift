@@ -7,7 +7,7 @@ import 'package:myapp/screens/widgets/confirmation_popup.dart';
 class UserFeedBack {
 
   // A function which shows confirmation dialog
-  static void showConfirmation(String amount, String phoneNumber, VoidCallback onTap){
+  static void showConfirmation({ required String amount, required String phoneNumber, required VoidCallback onTap }){
     showDialog(
       context: Get.context!, 
       builder: (context) => AlertDialog(

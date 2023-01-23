@@ -1,224 +1,146 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:myapp/API/api_endpoints.dart';
-import 'package:myapp/API/local_storage.dart';
-import 'package:myapp/API/secret_keys.dart';
-import 'package:myapp/models/company_balance_model.dart';
-import 'package:myapp/models/telecom_operators_model.dart';
-import 'package:myapp/models/user_country_details_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myapp/API/Afri_Talking_API.dart';
+import 'package:myapp/controllers/auth_controller.dart';
+import 'package:myapp/controllers/payment_controller.dart';
+import 'package:myapp/models/airtime_response_model.dart';
+import 'package:myapp/utilities/message_logger.dart';
+import 'package:http/http.dart' as http;
+import 'package:myapp/utilities/user_feedback.dart';
+
 
 class TopUpController extends GetxController {
 
-  // an instance of getConnect
-  final _getConnect = GetConnect();
+  // an instance of authController
+  var authController = Get.find<AuthController>();
 
-  // Reactive Lists
-  final availableOperators = <TeleComOperatorsModel>[].obs;
-  final numberDetails = <TeleComOperatorsModel>[].obs;
+  // an instance of payment controller
+  var paymentController = Get.find<PaymentController>();
+
+  final isLoading = false.obs;
   
-  TeleComOperatorsModel get phoneNumberDetails => numberDetails.first;
-
-
-
-  // a function which gets an access token which can expire, from Reloadly API
-  Future<void> getAccessToken() async {
-    // Obtain shared preferences.
-    var prefs = await SharedPreferences.getInstance();
-
-    try{      
-      Response response = await _getConnect.post(APIendPoints.getAccessTokenAPI, payloadData, headers: headersData);
-
-      if(response.body['access_token'] != null){
-        // save access token using sharedPreferences
-        await prefs.setString(StorageLocals.ACCESS_TOKEN, response.body['access_token']);
-        var savedToken =  prefs.getString(StorageLocals.ACCESS_TOKEN);
-        //testing
-        debugPrint("ACCESS_TOKEN: $savedToken");
-
-      }
-      
-    }catch (e){
-      if(kDebugMode){
-        debugPrint(e.toString());
-      }
-    }
-  }
 
 
 
 
-
-  // A function to fetch comapny's balance
-  Future<void> checkCompanysBalance() async {
+  // A function to make airtime top up
+  Future<void> sendAirtimeTopUp({ required String phoneNumber, required String currencyCode, required String amount}) async {
     try{
-      // instance of SharedPreferences   
-      var preferences = await SharedPreferences.getInstance();
+      isLoading.value = true;
 
-      // Getting token saved in the locals 
-      var accessToken = await preferences.getString(StorageLocals.ACCESS_TOKEN);
+      var url = Uri.parse(AfricasTalkingAPI.sendAirtimeSANDBOX);
 
-      var headers = APIendPoints.headerWithToken(accessToken!);       
+      // sending a request and capturing the result in our API
+      var response = await http.post(
+        url,
+        headers: AfricasTalkingAPI.headers,
+        body: AfricasTalkingAPI.getAirtimePayLoad(phoneNumber, currencyCode, amount),
+        encoding: Encoding.getByName('utf-8'),
+      );
 
-      Response response = await _getConnect.get(APIendPoints.getCompanyBalanceAPI, headers: headers);
+      // Deserializing the data to our model
+      var airTimeResponseData = AirtimeResponseModel.fromJson(jsonDecode(response.body));
 
-      // deserializing the data to a model
-      var balanceModel = CompanyReloadlyBalanceModel.fromJson(jsonDecode(response.body));
+      if(airTimeResponseData.errorMessage == 'None'){
+        // calling the function that will save our transaction in the Database
+        await paymentController.saveMyTransaction('Airtime', amount, airTimeResponseData.responses.first.requestId);
 
-      // save balance to the locals
-      await preferences.setString(StorageLocals.COMPANY_BALANCE, balanceModel.balance.toString());
-      
-      // print test
-      print(balanceModel);
-      print("BALANCE: ${balanceModel.balance}");
+        // delay before the next api call
+        Future.delayed(Duration(seconds: 1));
 
+        // calling the function that will update my balance
+        await paymentController.updateMyBalance(int.parse(amount), false);
+
+        // calling a function that fetches all transactions
+        await paymentController.fetchAllTransactions();
+
+        // stop loading
+        isLoading.value = false;
+
+        // give feedback to user
+        UserFeedBack.showSuccessSnackBar('Airtime sent');
+
+        // delay before the next api call
+        Future.delayed(Duration(seconds: 1));
+
+        // navigate to home
+        authController.goToTransactionHistoryScreen();
+      }else{
+        // stop loading
+        isLoading.value = false;
+        UserFeedBack.showErrorSnackBar('Airtime not sent');
+      }
 
     }catch (e){
+      // stop loading
+      isLoading.value = false;
+      UserFeedBack.showErrorSnackBar('Airtime not sent');
       if(kDebugMode){
-        debugPrint(e.toString());
+        AppLogger.e(e);
       }
     }
   }
 
 
 
+  // A function to make mobile data top up
+  Future<void> sendMobileDataTopUp({ required String phoneNumber, required String amountOfDataInMB, required String validity}) async {
+    try{
+      isLoading.value = true;
 
+      var url = Uri.parse(AfricasTalkingAPI.mobileDataTopUpAPI);
 
-
-  // A function to fetch details of a particular country
-  Future<void> fetchDetailsofACountry(String countryCode) async {
-    try{     
-
-      // instance of SharedPreferences   
-      var preferences = await SharedPreferences.getInstance();
-
-      // Getting token saved in the locals 
-      var accessToken = await preferences.getString(StorageLocals.ACCESS_TOKEN);
-
-      // GET request to the API
-      Response response = await _getConnect.get(
-        APIendPoints.getDetailsofACountryAPI(countryCode),
-        headers: APIendPoints.headerWithToken(accessToken!)
-      );
-
-      // Deserializing the country's info gotten
-      var countryInfo = UserCountryDetailModel.fromJson(jsonDecode(response.body));
-
-      print(countryInfo.name); //test
-
-      
-    }catch (e){
-      if(kDebugMode){
-        debugPrint(e.toString());
-      }
-    }
-  }
-
-
-
-
-
-
-
-  // A function which decifers a number (finding out it's operator)
-  Future<void> deciferThisNumber(String phoneNumber, String countryCode) async {
-    try{     
-
-      // instance of SharedPreferences   
-      var preferences = await SharedPreferences.getInstance();
-
-      // Getting token saved in the locals 
-      var accessToken = await preferences.getString(StorageLocals.ACCESS_TOKEN);
-
-      // GET API for decifering a phone number
-      Response response = await _getConnect.get(
-        APIendPoints.deciferAMobileNumberAPI(phoneNumber, countryCode),
-        headers: APIendPoints.headerWithToken(accessToken!)
-      );
-
-      // Saving data gotten in a LIst
-      numberDetails.add(TeleComOperatorsModel.fromJson(jsonDecode(response.body)));
-
-      // testing
-      print(phoneNumberDetails.operatorId);
-
-    }catch (e){
-      if(kDebugMode){
-        debugPrint(e.toString());
-      }
-    }  
-  }
-
-
-
-
-
-  // A function which fetches all the available operators in a particular country
-  Future<void> fetchAvailableOperators(String countryCode) async {
-    
-    try{     
-
-      // instance of SharedPreferences   
-      var preferences = await SharedPreferences.getInstance();
-
-      // Getting token saved in the locals 
-      var accessToken = await preferences.getString(StorageLocals.ACCESS_TOKEN);
-
-      // GET API for fetching available operators
-      Response response = await _getConnect.get(
-        APIendPoints.fetchAvailableOperatorsAPI(countryCode),
-        headers: APIendPoints.headerWithToken(accessToken!)
-      );
-
-      // deserializing the data to a model and saving it as a LIST
-      availableOperators.addAll((jsonDecode(response.body) as List).map((e) => TeleComOperatorsModel.fromJson(e)).toList());
-
-      // testing
-      print("B: ${availableOperators[3].name}");
-      print("LENGTH: ${availableOperators.length}");
-       for(var a in availableOperators) {
-        print(a.name);
-       }
-
-    }catch (e){
-      if(kDebugMode){
-        debugPrint(e.toString());
-      }
-    }  
-  }
-
-
-
-
-
-  // A function which makes the real top-up
-  Future<void> makeATopUp({required String operatorID, required String amount, required String recipientEmail, required String recipientPhoneNumber, required String recipientCountryCode, required String senderCountryCode, required String senderPhoneNumber}) async {
-
-    try{     
-
-      // instance of SharedPreferences   
-      var preferences = await SharedPreferences.getInstance();
-
-      // Getting token saved in the locals 
-      var accessToken = await preferences.getString(StorageLocals.ACCESS_TOKEN);
-
-      // POST API for making a topup
-      Response response = await _getConnect.post(
-        APIendPoints.makeATopUpAPI,
-        APIendPoints.payloadForTopUp(operatorID: operatorID, amount: amount, recipientEmail: recipientEmail, recipientPhoneNumber: recipientPhoneNumber, recipientCountryCode: recipientCountryCode, senderCountryCode: senderCountryCode, senderPhoneNumber: senderPhoneNumber),
-        headers: APIendPoints.headerWithToken(accessToken!),
+      // sending a request and capturing the result in our API
+      var response = await http.post(
+        url,
+        headers: AfricasTalkingAPI.headersForData,
+        body: jsonEncode(AfricasTalkingAPI.getMobileDataPayLoad(phoneNumber, amountOfDataInMB, validity)) ,
+        encoding: Encoding.getByName('utf-8'),
       );
 
       print(response.body);
 
+      // // Deserializing the data to our model
+      // var dataResponseData = DataResponseModel.fromJson(jsonDecode(response.body[0]));
+      // print(dataResponseData.phoneNumber); //testing
+      // print(dataResponseData.provider); //testing
+      // print(dataResponseData.value); //testing
+
+
+      // if(dataResponseData.status == "Queued"){
+      //  print('Data topUp Successful');
+      // }else{
+      //   UserFeedBack.showErrorSnackBar('Data Top-Up Failed');
+      // }
+
+      // stop loading
+      isLoading.value = false;
+
     }catch (e){
+      // stop loading
+      isLoading.value = false;
+
+      UserFeedBack.showErrorSnackBar('Data Top-Up Failed');
+
       if(kDebugMode){
-        debugPrint(e.toString());
+        AppLogger.e(e);
       }
-    }  
+    }
   }
+
+
+
+
+
+
+  // A function that gets and returns the currency of a country
+
+
+
+
+
+
 
 
 
