@@ -16,15 +16,10 @@ class PaymentController extends GetxController {
   // instance of auth controller
   AuthController authController = Get.find<AuthController>();
 
-  // Lists
-  var depositTransactionsList = <TransactionHistoryModel>[].obs;
-  var purchaseTransactionsList = <TransactionHistoryModel>[].obs;
-
 
 
   @override
   void onReady() {
-    fetchAllTransactions();
     super.onReady();
   }
 
@@ -117,7 +112,7 @@ class PaymentController extends GetxController {
       // delay
       await Future.delayed(const Duration(seconds: 1));
       // calling a function that fetches all transactions
-      await fetchAllTransactions();
+      await authController.fetchAllTransactions();
       // go to home
       authController.goToTransactionHistoryScreen();
 
@@ -130,33 +125,7 @@ class PaymentController extends GetxController {
 
 
 
-  // A function which makes a deposit to the user's wallet when called 
-  Future<void> fetchAllTransactions() async {
-    try{
-      // Making a query to our database for the transactions
-      QuerySnapshot<Map<String, dynamic>> txnData = await userFirestoreReference.doc(authController.getUser()!.email).collection('TXN').get();
-
-      var transactionData = txnData.docs.map((e) => TransactionHistoryModel.fromSnapshot(e)).toList();
-
-      // Set the lists to empty
-      depositTransactionsList.value = [];
-      purchaseTransactionsList.value = [];
-
-      // filtering all the transactions to their respective lists
-      for(var a in transactionData){
-        if(a.title == 'Deposit'){
-          depositTransactionsList.add(a);
-        }else{
-          purchaseTransactionsList.add(a);
-        }
-      }
-
-    }catch (e){
-      if(kDebugMode){
-        AppLogger.e(e);
-      }
-    }
-  }
+  
 
 
 

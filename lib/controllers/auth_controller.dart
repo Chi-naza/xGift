@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/models/transaction_model.dart';
 import 'package:myapp/models/user_model.dart';
 import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/screens/deposit/deposit_history_list.dart';
@@ -26,6 +27,10 @@ class AuthController extends GetxController {
 
   final usersList = <UserModel>[].obs;
   UserModel get currentUserDetails => usersList.first;
+
+   // Lists
+  var depositTransactionsList = <TransactionHistoryModel>[].obs;
+  var purchaseTransactionsList = <TransactionHistoryModel>[].obs;
 
 
 
@@ -50,6 +55,7 @@ class AuthController extends GetxController {
     // fetch user data if user is logged in
     if(isUserLoggedIn()){
       await fetchUserData();
+      await fetchAllTransactions(); // user's transactions
     }
 
   }
@@ -120,13 +126,16 @@ class AuthController extends GetxController {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       // delay before next API call
       await Future.delayed(const Duration(seconds: 1));      
-      // stop loading
+      // Get details of user after login
+      await fetchUserData();
+      // user's transactions
+      await fetchAllTransactions(); 
+       // stop loading
       isLoading.value = false;
       // show success feedback
       UserFeedBack.showSuccessSnackBar('Login successful !');
+      // delay
       await Future.delayed(const Duration(seconds: 1));
-      // Get details of user after login
-      await fetchUserData();
       // move into the app upon login
       goToTransactionHistoryScreen();
     }on FirebaseAuthException catch(e){
@@ -187,10 +196,12 @@ class AuthController extends GetxController {
       usersList.assign(currentUser);         
 
       // Testing
-      print(currentUser.firstName);
-      print(currentUser.surname);
-      print(currentUser.email);
-      print(currentUser.imageUrl);
+      if(kDebugMode){
+        print(currentUser.firstName);
+        print(currentUser.email);
+      }
+      
+      
       
 
     }catch (e){
@@ -265,33 +276,40 @@ class AuthController extends GetxController {
 
 
 
-  // A function which gets the details or data of the current user
-  // Future<void> getCurrentUserDetails() async {
-  //   try{
-  //     // activating loading
-  //     isLoading.value = true;
-  //     // Getting loggedIn user's data
-  //     DocumentSnapshot<Map<String, dynamic>> user = await userFirestoreReference.doc(getCurrentUser()!.email).get();
-  //     var currentlyLoggedInUser = UserModel.fromSnapshot(user);
-  //     currentUserData = currentlyLoggedInUser;
+// A function which makes a deposit to the user's wallet when called 
+  Future<void> fetchAllTransactions() async {
+    try{
+      // Making a query to our database for the transactions
+      QuerySnapshot<Map<String, dynamic>> txnData = await userFirestoreReference.doc(getUser()!.email).collection('TXN').get();
 
-  //     // initializing our profile image reactive variable
-  //     usersProfileImage.value = currentUserData.imageUrl;
+      var transactionData = txnData.docs.map((e) => TransactionHistoryModel.fromSnapshot(e)).toList();
 
-  //     await Future.delayed(const Duration(seconds: 1));
-  //     // getting user's sales
-  //     QuerySnapshot<Map<String, dynamic>> userSaleData = await userFirestoreReference.doc(currentUserData.email).collection('mySales').get();
-  //     // serializing it to a salesModel object
-  //     final salesDataList = userSaleData.docs.map(((e) => SalesModel.fromSnapshot(e))).toList();
-  //     // assigning the serialized object the field of mySales in the userModel
-  //     currentUserData.mySales.assignAll(salesDataList);
+      // Set the lists to empty
+      depositTransactionsList.value = [];
+      purchaseTransactionsList.value = [];
 
-  //     // deactivating loading
-  //     isLoading.value = false;
-  //   }catch (e){
-  //     AppLogger.e(e);
-  //   }
-  // }
+      // filtering all the transactions to their respective lists
+      for(var a in transactionData){
+        if(a.title == 'Deposit'){
+          depositTransactionsList.add(a);
+        }else{
+          purchaseTransactionsList.add(a);
+        }
+      }
+
+      // Testing
+      if(kDebugMode){
+        print("Deposit: $depositTransactionsList");
+        print("Airtime/Data: $purchaseTransactionsList");
+      }
+
+    }catch (e){
+      if(kDebugMode){
+        AppLogger.e(e);
+      }
+    }
+  }
+
 
 
 

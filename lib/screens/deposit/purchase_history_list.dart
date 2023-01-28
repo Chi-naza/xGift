@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/constants/app_dimensions.dart';
+import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/controllers/payment_controller.dart';
 import 'package:myapp/screens/deposit/deposit_history_list.dart';
 import 'package:myapp/screens/widgets/bottom_navbar.dart';
@@ -14,18 +15,20 @@ class PurchaseHistoryList extends GetView<PaymentController> {
 
   @override
   Widget build(BuildContext context) {
+
+    var authController = Get.find<AuthController>();
     
     return GiftHeaderAndTemplateWidget2(
       titleText: 'History', 
       content: Obx(() {
           return ListView.separated(
             shrinkWrap: true,
-            itemCount: controller.purchaseTransactionsList.length,
+            itemCount: authController.purchaseTransactionsList.length,
             physics: const NeverScrollableScrollPhysics(),
             separatorBuilder: (context, index) => SizedBox(height: GiftDim.size4),          
             itemBuilder: (context, index) {
               // a variable to make work easier
-              var txn = controller.purchaseTransactionsList[index];
+              var txn = authController.purchaseTransactionsList[index];
               return TransactionHistoryCard(
                 title: txn.title, //'Airtime', 
                 txnID: txn.transactionID, //'3485001', 

@@ -98,11 +98,12 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                     phoneNumber: '+2349039427144',//authController.currentUserDetails.phoneNumber, // number
                     onTap: () { 
                       Get.back();
+                      print("$amount.0");
                       // calling the airTime topUp function
                       topUpController.sendAirtimeTopUp(
                         phoneNumber: authController.currentUserDetails.phoneNumber, 
                         currencyCode: currencyController.text.trim(), 
-                        amount: amountController.text.trim(),
+                        amount: "$amount.0",
                       );
                     }
                   );

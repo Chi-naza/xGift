@@ -6,11 +6,13 @@ class AfricasTalkingAPI {
   
   // FOR AIRTIME (POST request)
   static const String sendAirtimeAPI = "https://api.africastalking.com/version1/airtime/send";
-  static const String sendAirtimeSANDBOX = "https://api.sandbox.africastalking.com/version1/airtime/send";
+  // static const String sendAirtimeSANDBOX = "https://api.sandbox.africastalking.com/version1/airtime/send";
 
 
   // FOR MOBILE DATA (POST request)
   static const String mobileDataTopUpAPI = "https://payments.africastalking.com/mobile/data/request";
+
+  
 
 
   // API Headers
@@ -31,7 +33,7 @@ class AfricasTalkingAPI {
   static getAirtimePayLoad(String phoneNumber, String currencyCode, String amount){
 
     var payLoad = {
-      "username" : "sandbox",
+      "username" : GIFT_USERNAME,
       "recipients" : jsonEncode([{"phoneNumber":"$phoneNumber","amount":"$currencyCode $amount"},])
     };
 
@@ -44,8 +46,8 @@ class AfricasTalkingAPI {
   static getMobileDataPayLoad(String phoneNumber, String amountOfDataInMB, String validity) {
 
     var payLoad = {      
-      "username" : "sandbox",
-      "productName" : "Data Top-Up",      
+      "username" : GIFT_USERNAME,
+      "productName" : "Gift Network",      
       "recipients" : [{"phoneNumber":phoneNumber}], // e.g +234811222333  
       "quantity" : amountOfDataInMB,    
       "unit" : "MB",

@@ -29,7 +29,7 @@ class TopUpController extends GetxController {
     try{
       isLoading.value = true;
 
-      var url = Uri.parse(AfricasTalkingAPI.sendAirtimeSANDBOX);
+      var url = Uri.parse(AfricasTalkingAPI.sendAirtimeAPI);
 
       // sending a request and capturing the result in our API
       var response = await http.post(
@@ -38,6 +38,8 @@ class TopUpController extends GetxController {
         body: AfricasTalkingAPI.getAirtimePayLoad(phoneNumber, currencyCode, amount),
         encoding: Encoding.getByName('utf-8'),
       );
+
+      print(response.body);
 
       // Deserializing the data to our model
       var airTimeResponseData = AirtimeResponseModel.fromJson(jsonDecode(response.body));
@@ -53,7 +55,7 @@ class TopUpController extends GetxController {
         await paymentController.updateMyBalance(int.parse(amount), false);
 
         // calling a function that fetches all transactions
-        await paymentController.fetchAllTransactions();
+        await authController.fetchAllTransactions();
 
         // stop loading
         isLoading.value = false;
