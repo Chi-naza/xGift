@@ -5,13 +5,31 @@ import 'package:myapp/constants/app_dimensions.dart';
 import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/controllers/payment_controller.dart';
 import 'package:myapp/screens/widgets/app_button.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 
-class PaymentScreen extends StatelessWidget {
+class PaymentScreen extends StatefulWidget {
   final String amount;
 
   const PaymentScreen({Key? key, required this.amount}) : super(key: key);
-  
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+
+  var publicKey = payStackPublicKey;
+  final plugin = PaystackPlugin();
+
+  // instance of payment controller
+  var paymentController = Get.find<PaymentController>();
+
+  @override
+  void initState() {
+    plugin.initialize(publicKey: publicKey);
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +46,11 @@ class PaymentScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: GiftDim.size20),
           child: AppButton(
-            text: 'Pay With PayStack: [$amount]', 
+            text: 'Pay With PayStack: [${widget.amount}]', 
               onPressed: (() {
-                // get a unique ID from date time
-                var uniqueIdReference = DateTime.now().microsecondsSinceEpoch.toString();
-                
-                PayWithPayStack().now(
-                  context: context, 
-                  secretKey: payStackTestSecretKey, 
-                  customerEmail: _authController.getUser()!.email!, 
-                  reference: uniqueIdReference, 
-                  currency: 'NGN', 
-                  amount: '${amount}00', // amount comming from deposit screen
-                  transactionCompleted: () { 
-                    // done when transaction succeeds
-                    paymentController.transactionSucceeded(int.parse(amount), 'Txn$uniqueIdReference'); 
-                  }, 
-                  transactionNotCompleted: () { 
-                    // done when transaction fails
-                    paymentController.transactionFailed(); 
-                  },  
-                );
+
+                // calling the charge card function from paymentController
+                paymentController.chargeCard(plugin, int.parse(widget.amount));
                 
               }
             ),

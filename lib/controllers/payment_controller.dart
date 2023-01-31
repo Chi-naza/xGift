@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:myapp/controllers/auth_controller.dart';
 import 'package:myapp/models/transaction_model.dart';
 import 'package:myapp/models/user_model.dart';
+import 'package:myapp/screens/deposit/deposit_screen.dart';
 import 'package:myapp/utilities/firebase_references.dart';
 import 'package:myapp/utilities/message_logger.dart';
 import 'package:myapp/utilities/user_feedback.dart';
@@ -26,15 +30,18 @@ class PaymentController extends GetxController {
 
 
   // A function which executes when a transaction is successful
-  void transactionSucceeded(int amount, String txnID){
+  Future<void> transactionSucceeded(int amount, String txnID) async {
     // Calling the deposit function upon successful payment with payment Gateway
-    depositToMyWallet(amount, true, txnID);
+    await depositToMyWallet(amount, true, txnID);
+    // Go to home
+    authController.goToTransactionHistoryScreen();
     // Give user a feedback
     UserFeedBack.showSuccessSnackBar('Transaction Successful');
   }
 
   // A function called when transaction fails
   void transactionFailed() {
+    Get.to(DepositScreen());
     UserFeedBack.showErrorSnackBar('Transaction Failed');
   }
 
@@ -140,6 +147,51 @@ class PaymentController extends GetxController {
     String newFig = mf.output.withoutFractionDigits;
 
     return newFig;
+  }
+
+
+
+
+
+
+   //used to generate a unique reference for payment
+  String _getReference() {
+    var platform = (Platform.isIOS) ? 'iOS' : 'Android';
+    final thisDate = DateTime.now().millisecondsSinceEpoch;
+    return 'Txn_${thisDate}_$platform';
+  }
+
+
+
+  // Async method/function to charge users card and return a response
+  Future<void> chargeCard(PaystackPlugin pluginObject, int amount) async {
+
+    String uniquePaymentRef = _getReference();
+    print("UNIQUE: $uniquePaymentRef"); // testing
+   
+
+    var charge = Charge()
+      ..amount = amount *
+          100 //the money should be in kobo hence the need to multiply the value by 100
+      ..reference = uniquePaymentRef
+      ..email = authController.getUser()!.email; // user email
+
+    CheckoutResponse response = await pluginObject.checkout(
+      Get.context!,
+      method: CheckoutMethod.card,
+      charge: charge,
+    );
+
+    //check if the response is true or not
+    if (response.status == true) {
+      // if true, then the transaction went well
+      transactionSucceeded(amount, uniquePaymentRef);      
+    } else {
+      //the payment wasn't successsful or the user cancelled the payment
+      transactionFailed();
+    }
+
+
   }
 
 

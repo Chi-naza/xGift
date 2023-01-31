@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:myapp/controllers/payment_controller.dart';
 import 'package:myapp/screens/auth/signin_screen.dart';
 import 'package:myapp/screens/auth/signup_screen.dart';
